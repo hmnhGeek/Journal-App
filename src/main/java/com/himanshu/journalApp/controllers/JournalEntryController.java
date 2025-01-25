@@ -23,8 +23,8 @@ public class JournalEntryController {
      * This is a {@code GET} endpoint - {@code /journal}.
      */
     @GetMapping
-    public List<JournalEntry> getAll() {
-        return journalEntryService.getAll();
+    public ResponseEntity<List<JournalEntry>> getAll() {
+        return new ResponseEntity<>(journalEntryService.getAll(), HttpStatus.OK);
     }
 
     /**
@@ -35,9 +35,9 @@ public class JournalEntryController {
      * This is a {@code POST} endpoint - {@code /journal}.
      */
     @PostMapping
-    public JournalEntry createEntry(@RequestBody JournalEntry journalEntry) {
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry journalEntry) {
         JournalEntry savedJournalEntry = journalEntryService.save(journalEntry);
-        return savedJournalEntry;
+        return new ResponseEntity<>(savedJournalEntry, HttpStatus.CREATED);
     }
 
     /**
@@ -59,8 +59,9 @@ public class JournalEntryController {
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
      */
     @DeleteMapping("{id}")
-    public void deleteJournalEntryById(@PathVariable ObjectId id) {
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
         journalEntryService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /**
@@ -70,8 +71,8 @@ public class JournalEntryController {
      * @return The updated journal entry.
      */
     @PutMapping("{id}")
-    public JournalEntry updateJournalEntryById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
+    public ResponseEntity<JournalEntry> updateJournalEntryById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
         JournalEntry updatedJournalEntry = journalEntryService.updateById(id, journalEntry);
-        return updatedJournalEntry;
+        return new ResponseEntity<>(updatedJournalEntry, HttpStatus.OK);
     }
 }
