@@ -5,6 +5,8 @@ import com.himanshu.journalApp.repositories.JournalEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -27,6 +29,7 @@ public class JournalEntryService {
      * @return {@code JournalEntry} by saving the entry inside the MongoDB collection.
      */
     public JournalEntry save(JournalEntry journalEntry) {
+        journalEntry.setDate(LocalDateTime.now());
         JournalEntry savedJournalEntry = journalEntryRepository.save(journalEntry);
         return savedJournalEntry;
     }
