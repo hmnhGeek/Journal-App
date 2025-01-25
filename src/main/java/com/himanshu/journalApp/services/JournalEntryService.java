@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -72,8 +73,8 @@ public class JournalEntryService {
     public JournalEntry updateById(ObjectId id, JournalEntry journalEntry) {
         JournalEntry oldJournalEntry = journalEntryRepository.findById(id).orElse(null);
         if (oldJournalEntry != null) {
-            oldJournalEntry.setTitle(journalEntry.getTitle() != null && journalEntry.getTitle() != "" ? journalEntry.getTitle() : oldJournalEntry.getTitle());
-            oldJournalEntry.setContent(journalEntry.getContent() != null && journalEntry.getContent() != "" ? journalEntry.getContent() : oldJournalEntry.getContent());
+            oldJournalEntry.setTitle(journalEntry.getTitle() != null && !Objects.equals(journalEntry.getTitle(), "") ? journalEntry.getTitle() : oldJournalEntry.getTitle());
+            oldJournalEntry.setContent(journalEntry.getContent() != null && !Objects.equals(journalEntry.getContent(), "") ? journalEntry.getContent() : oldJournalEntry.getContent());
         }
         journalEntryRepository.save(oldJournalEntry);
         return oldJournalEntry;
