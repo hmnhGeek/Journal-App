@@ -54,4 +54,12 @@ public class JournalEntryService {
         Optional<JournalEntry> journalEntry = journalEntryRepository.findById(id);
         return journalEntry;
     }
+
+    /**
+     *
+     * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
+     */
+    public void deleteById(ObjectId id) {
+        journalEntryRepository.deleteById(id);
+    }
 }

@@ -49,9 +49,13 @@ public class JournalEntryController {
         return journalEntry.orElse(null);
     }
 
+    /**
+     *
+     * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
+     */
     @DeleteMapping("{id}")
-    public JournalEntry deleteJournalEntryById(@PathVariable Long id) {
-        return null;
+    public void deleteJournalEntryById(@PathVariable ObjectId id) {
+        journalEntryService.deleteById(id);
     }
 
     @PutMapping("{id}")
