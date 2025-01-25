@@ -13,10 +13,14 @@ public class JournalEntryController {
     @Autowired
     private JournalEntryService journalEntryService;
 
+    /**
+     *
+     * @return  {@code List<JournalEntry>} A list of all the saved journal entries in the MongoDB collection.
+     * This is a {@code GET} endpoint - {@code /journal}.
+     */
     @GetMapping
     public List<JournalEntry> getAll() {
-        // This will map to /journal GET.
-        return null;
+        return journalEntryService.getAll();
     }
 
     /**
