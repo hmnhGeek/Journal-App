@@ -4,6 +4,8 @@ import com.himanshu.journalApp.entities.JournalEntry;
 import com.himanshu.journalApp.services.JournalEntryService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,12 +43,15 @@ public class JournalEntryController {
     /**
      *
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb collection.
-     * @return A {@code JournalEntry} or else if not present, then returns {@code null}.
+     * @return A {@code JournalEntry} or else if not present, then returns a bad request.
      */
     @GetMapping("{id}")
-    public JournalEntry getJournalEntryById(@PathVariable ObjectId id) {
+    public ResponseEntity<JournalEntry> getJournalEntryById(@PathVariable ObjectId id) {
         Optional<JournalEntry> journalEntry = journalEntryService.getById(id);
-        return journalEntry.orElse(null);
+        if (journalEntry.isPresent()) {
+            return new ResponseEntity<>(journalEntry.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
