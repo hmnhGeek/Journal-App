@@ -2,10 +2,12 @@ package com.himanshu.journalApp.controllers;
 
 import com.himanshu.journalApp.entities.JournalEntry;
 import com.himanshu.journalApp.services.JournalEntryService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/journal")
@@ -36,9 +38,15 @@ public class JournalEntryController {
         return savedJournalEntry;
     }
 
+    /**
+     *
+     * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb collection.
+     * @return A {@code JournalEntry} or else if not present, then returns {@code null}.
+     */
     @GetMapping("{id}")
-    public JournalEntry getJournalEntryById(@PathVariable Long id) {
-        return null;
+    public JournalEntry getJournalEntryById(@PathVariable ObjectId id) {
+        Optional<JournalEntry> journalEntry = journalEntryService.getById(id);
+        return journalEntry.orElse(null);
     }
 
     @DeleteMapping("{id}")

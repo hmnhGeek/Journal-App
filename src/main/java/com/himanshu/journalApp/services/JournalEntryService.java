@@ -2,12 +2,13 @@ package com.himanshu.journalApp.services;
 
 import com.himanshu.journalApp.entities.JournalEntry;
 import com.himanshu.journalApp.repositories.JournalEntryRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * It is important to add {@code @Component} annotation to this class so that a bean can be created for this class at
@@ -41,5 +42,16 @@ public class JournalEntryService {
     public List<JournalEntry> getAll() {
         List<JournalEntry> allSavedJournalEntries = journalEntryRepository.findAll();
         return allSavedJournalEntries;
+    }
+
+    /**
+     *
+     * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb collection.
+     * @return Optional journal entry.
+     */
+    public Optional<JournalEntry> getById(ObjectId id) {
+        // Optional is like a box; there can be data inside it or not.
+        Optional<JournalEntry> journalEntry = journalEntryRepository.findById(id);
+        return journalEntry;
     }
 }
