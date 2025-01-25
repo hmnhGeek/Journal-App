@@ -58,8 +58,15 @@ public class JournalEntryController {
         journalEntryService.deleteById(id);
     }
 
+    /**
+     *
+     * @param id A parameter of type {@code ObjectId} from the mongodb collection.
+     * @param journalEntry A parameter of type {@code JournalEntry} with updated value.
+     * @return The updated journal entry.
+     */
     @PutMapping("{id}")
-    public JournalEntry updateJournalEntryById(@PathVariable Long id, @RequestBody JournalEntry journalEntry) {
-        return null;
+    public JournalEntry updateJournalEntryById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
+        JournalEntry updatedJournalEntry = journalEntryService.updateById(id, journalEntry);
+        return updatedJournalEntry;
     }
 }

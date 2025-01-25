@@ -62,4 +62,20 @@ public class JournalEntryService {
     public void deleteById(ObjectId id) {
         journalEntryRepository.deleteById(id);
     }
+
+    /**
+     *
+     * @param id A parameter of type {@code ObjectId} from the mongodb collection.
+     * @param journalEntry A parameter of type {@code JournalEntry} with updated value.
+     * @return The updated journal entry.
+     */
+    public JournalEntry updateById(ObjectId id, JournalEntry journalEntry) {
+        JournalEntry oldJournalEntry = journalEntryRepository.findById(id).orElse(null);
+        if (oldJournalEntry != null) {
+            oldJournalEntry.setTitle(journalEntry.getTitle() != null && journalEntry.getTitle() != "" ? journalEntry.getTitle() : oldJournalEntry.getTitle());
+            oldJournalEntry.setContent(journalEntry.getContent() != null && journalEntry.getContent() != "" ? journalEntry.getContent() : oldJournalEntry.getContent());
+        }
+        journalEntryRepository.save(oldJournalEntry);
+        return oldJournalEntry;
+    }
 }
