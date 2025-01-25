@@ -1,46 +1,49 @@
 package com.himanshu.journalApp.controllers;
 
 import com.himanshu.journalApp.entities.JournalEntry;
+import com.himanshu.journalApp.services.JournalEntryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/journal")
 public class JournalEntryController {
-    private Map<Long, JournalEntry> journalEntries = new HashMap<>();
+    @Autowired
+    private JournalEntryService journalEntryService;
 
     @GetMapping
     public List<JournalEntry> getAll() {
         // This will map to /journal GET.
-        return new ArrayList<>(journalEntries.values());
+        return null;
     }
 
+    /**
+     *
+     * @param journalEntry A request body of type {@code JournalEntry}.
+     * @return A saved {@code JournalEntry} in the MongoDB collection.
+     *
+     * This is a {@code POST} endpoint - {@code /journal}.
+     */
     @PostMapping
-    public boolean createEntry(@RequestBody JournalEntry journalEntry) {
-        // This will map to /journal POST.
-        journalEntries.put(journalEntry.getId(), journalEntry);
-        return true;
+    public JournalEntry createEntry(@RequestBody JournalEntry journalEntry) {
+        JournalEntry savedJournalEntry = journalEntryService.save(journalEntry);
+        return savedJournalEntry;
     }
 
     @GetMapping("{id}")
     public JournalEntry getJournalEntryById(@PathVariable Long id) {
-        JournalEntry journalEntry = journalEntries.get(id);
-        return journalEntry;
+        return null;
     }
 
     @DeleteMapping("{id}")
     public JournalEntry deleteJournalEntryById(@PathVariable Long id) {
-        JournalEntry removedEntry = journalEntries.remove(id);
-        return removedEntry;
+        return null;
     }
 
     @PutMapping("{id}")
     public JournalEntry updateJournalEntryById(@PathVariable Long id, @RequestBody JournalEntry journalEntry) {
-        JournalEntry updatedEntry = journalEntries.put(id, journalEntry);
-        return updatedEntry;
+        return null;
     }
 }
