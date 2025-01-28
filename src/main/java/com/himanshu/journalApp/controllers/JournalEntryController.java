@@ -40,8 +40,8 @@ public class JournalEntryController {
     /**
      *
      * @param journalEntry A request body of type {@code JournalEntry}.
+     * @param userName A string type denoting the username whose journal entry is being created.
      * @return A saved {@code JournalEntry} in the MongoDB collection.
-     *
      * This is a {@code POST} endpoint - {@code /journal}.
      */
     @PostMapping("/{userName}")
@@ -65,8 +65,9 @@ public class JournalEntryController {
     }
 
     /**
-     *
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
+     * @param userName A string type denoting the user whose journal entry is being deleted.
+     * @return A {@code NO_CONTENT} HTTP Status.
      */
     @DeleteMapping("/id/{userName}/{id}")
     public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id, @PathVariable String userName) {
