@@ -68,9 +68,9 @@ public class JournalEntryController {
      *
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
      */
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
-        journalEntryService.deleteById(id);
+    @DeleteMapping("/id/{userName}/{id}")
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id, @PathVariable String userName) {
+        journalEntryService.deleteById(id, userName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
