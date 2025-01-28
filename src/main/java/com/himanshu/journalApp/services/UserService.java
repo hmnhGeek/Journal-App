@@ -75,6 +75,10 @@ public class UserService {
         return user;
     }
 
+    /**
+     *
+     * @param user A type of {@code User} whose username or password needs to be updated.
+     */
     public void updateUser(User user) {
         // To authenticate a user from headers use this syntax.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -86,6 +90,9 @@ public class UserService {
         save(savedUser);
     }
 
+    /**
+     * Delete the user in session.
+     */
     public void deleteUser() {
         // To authenticate a user from headers use this syntax.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
