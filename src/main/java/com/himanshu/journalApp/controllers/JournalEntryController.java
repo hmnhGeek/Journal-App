@@ -1,7 +1,9 @@
 package com.himanshu.journalApp.controllers;
 
 import com.himanshu.journalApp.entities.JournalEntry;
+import com.himanshu.journalApp.entities.User;
 import com.himanshu.journalApp.services.JournalEntryService;
+import com.himanshu.journalApp.services.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +19,22 @@ public class JournalEntryController {
     @Autowired
     private JournalEntryService journalEntryService;
 
+    @Autowired
+    private UserService userService;
+
     /**
-     *
-     * @return  {@code List<JournalEntry>} A list of all the saved journal entries in the MongoDB collection.
-     * This is a {@code GET} endpoint - {@code /journal}.
+     * @param userName A string value representing the username stored in the {@code users} collection.
+     * @return  {@code List<JournalEntry>} A list of all the saved journal entries in the MongoDB collection for a particular user.
+     * This is a {@code GET} endpoint - {@code /journal/<userName>}.
      */
-    @GetMapping
-    public ResponseEntity<List<JournalEntry>> getAll() {
-        return new ResponseEntity<>(journalEntryService.getAll(), HttpStatus.OK);
+    @GetMapping("{userName}")
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesOfUser(@PathVariable String userName) {
+        User user = userService.findByUserName(userName);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<JournalEntry> journalEntries = user.getJournalEntries();
+        return new ResponseEntity<>(journalEntries, HttpStatus.OK);
     }
 
     /**
@@ -45,7 +55,7 @@ public class JournalEntryController {
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb collection.
      * @return A {@code JournalEntry} or else if not present, then returns a bad request.
      */
-    @GetMapping("{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<JournalEntry> getJournalEntryById(@PathVariable ObjectId id) {
         Optional<JournalEntry> journalEntry = journalEntryService.getById(id);
         if (journalEntry.isPresent()) {
@@ -58,7 +68,7 @@ public class JournalEntryController {
      *
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
      */
-    @DeleteMapping("{id}")
+    @DeleteMapping("/id/{id}")
     public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
         journalEntryService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -70,7 +80,7 @@ public class JournalEntryController {
      * @param journalEntry A parameter of type {@code JournalEntry} with updated value.
      * @return The updated journal entry.
      */
-    @PutMapping("{id}")
+    @PutMapping("/id/{id}")
     public ResponseEntity<JournalEntry> updateJournalEntryById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
         JournalEntry updatedJournalEntry = journalEntryService.updateById(id, journalEntry);
         return new ResponseEntity<>(updatedJournalEntry, HttpStatus.OK);
