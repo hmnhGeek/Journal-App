@@ -54,4 +54,14 @@ public class UserService {
     public void deleteById(ObjectId id) {
         userRepository.deleteById(id);
     }
+
+    /**
+     *
+     * @param userName A string value denoting the case-sensitive username.
+     * @return A {@code User} data type extracted from the database.
+     */
+    public User findByUserName(String userName) {
+        User user = userRepository.findByUserName(userName);
+        return user;
+    }
 }

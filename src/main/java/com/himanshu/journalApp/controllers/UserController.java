@@ -1,9 +1,39 @@
 package com.himanshu.journalApp.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.himanshu.journalApp.entities.User;
+import com.himanshu.journalApp.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> allUsers = userService.getAll();
+        return new ResponseEntity<>(allUsers, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addUser(@RequestBody User user) {
+        User savedUser = userService.save(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        User savedUser = userService.findByUserName(user.getUserName());
+        if (savedUser != null) {
+            savedUser.setUserName(user.getUserName());
+            savedUser.setPassword(user.getPassword());
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
