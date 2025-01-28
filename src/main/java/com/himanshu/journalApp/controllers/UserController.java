@@ -26,4 +26,10 @@ public class UserController {
         userService.updateUser(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser() {
+        userService.deleteUser();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

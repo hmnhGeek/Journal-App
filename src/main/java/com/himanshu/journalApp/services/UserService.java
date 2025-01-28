@@ -76,11 +76,22 @@ public class UserService {
     }
 
     public void updateUser(User user) {
+        // To authenticate a user from headers use this syntax.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
+
         User savedUser = findByUserName(userName);
         savedUser.setUserName(user.getUserName());
         savedUser.setPassword(user.getPassword());
         save(savedUser);
+    }
+
+    public void deleteUser() {
+        // To authenticate a user from headers use this syntax.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = findByUserName(username);
+        deleteById(user.getId());
     }
 }
