@@ -1,6 +1,7 @@
 package com.himanshu.journalApp.services;
 
 import com.himanshu.journalApp.entities.JournalEntry;
+import com.himanshu.journalApp.entities.User;
 import com.himanshu.journalApp.repositories.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,20 @@ public class JournalEntryService {
     @Autowired
     private JournalEntryRepository journalEntryRepository;
 
+    @Autowired
+    private UserService userService;
+
     /**
      *
      * @param journalEntry Parameter of type {@code JournalEntry}.
      * @return {@code JournalEntry} by saving the entry inside the MongoDB collection.
      */
-    public JournalEntry save(JournalEntry journalEntry) {
+    public JournalEntry saveJournalEntry(JournalEntry journalEntry, String userName) {
+        User user = userService.findByUserName(userName);
         journalEntry.setDate(LocalDateTime.now());
         JournalEntry savedJournalEntry = journalEntryRepository.save(journalEntry);
+        user.getJournalEntries().add(savedJournalEntry);
+        userService.save(user);
         return savedJournalEntry;
     }
 

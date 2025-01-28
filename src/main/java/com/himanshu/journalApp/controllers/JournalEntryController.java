@@ -44,9 +44,9 @@ public class JournalEntryController {
      *
      * This is a {@code POST} endpoint - {@code /journal}.
      */
-    @PostMapping
-    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry journalEntry) {
-        JournalEntry savedJournalEntry = journalEntryService.save(journalEntry);
+    @PostMapping("/{userName}")
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry journalEntry, @PathVariable String userName) {
+        JournalEntry savedJournalEntry = journalEntryService.saveJournalEntry(journalEntry, userName);
         return new ResponseEntity<>(savedJournalEntry, HttpStatus.CREATED);
     }
 
