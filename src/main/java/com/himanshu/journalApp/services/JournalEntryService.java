@@ -6,6 +6,7 @@ import com.himanshu.journalApp.repositories.JournalEntryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,6 +35,7 @@ public class JournalEntryService {
      * @param journalEntry Parameter of type {@code JournalEntry}.
      * @return {@code JournalEntry} by saving the entry inside the MongoDB collection.
      */
+    @Transactional
     public JournalEntry saveJournalEntry(JournalEntry journalEntry, String userName) {
         User user = userService.findByUserName(userName);
         journalEntry.setDate(LocalDateTime.now());
