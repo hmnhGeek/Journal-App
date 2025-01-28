@@ -5,6 +5,8 @@ import com.himanshu.journalApp.entities.User;
 import com.himanshu.journalApp.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -17,12 +19,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     /**
      *
      * @param user Parameter of type {@code User}.
      * @return {@code User} by saving the entry inside the MongoDB collection.
      */
     public User save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedJournalEntry = userRepository.save(user);
         return user;
     }

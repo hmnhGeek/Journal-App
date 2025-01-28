@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    // If you're trying to use Spring Boot 2.6.0 or higher, you'll need to either resolve the circular references as mentioned by others, or set spring.main.allow-circular-references to true.
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -57,8 +58,8 @@ public class SecurityConfig {
          */
 
         return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/journal/**", "/user/**").authenticated()
+                        .requestMatchers("/users/**").permitAll()
+                        .requestMatchers("/journal/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults()) // httpBasic(Customizer.withDefaults()): Enables basic authentication (username/password prompt in the browser or API client).
