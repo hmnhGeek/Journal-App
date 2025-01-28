@@ -58,8 +58,8 @@ public class SecurityConfig {
          */
 
         return http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/journal/**").authenticated()
+                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/journal/**", "/users/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults()) // httpBasic(Customizer.withDefaults()): Enables basic authentication (username/password prompt in the browser or API client).

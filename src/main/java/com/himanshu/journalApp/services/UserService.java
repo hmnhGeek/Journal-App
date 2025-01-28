@@ -5,11 +5,15 @@ import com.himanshu.journalApp.entities.User;
 import com.himanshu.journalApp.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,6 +32,7 @@ public class UserService {
      */
     public User save(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(List.of("USER"));
         User savedJournalEntry = userRepository.save(user);
         return user;
     }
@@ -68,5 +73,14 @@ public class UserService {
     public User findByUserName(String userName) {
         User user = userRepository.findByUserName(userName);
         return user;
+    }
+
+    public void updateUser(User user) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User savedUser = findByUserName(userName);
+        savedUser.setUserName(user.getUserName());
+        savedUser.setPassword(user.getPassword());
+        save(savedUser);
     }
 }
