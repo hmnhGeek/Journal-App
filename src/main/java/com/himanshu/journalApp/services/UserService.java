@@ -38,6 +38,16 @@ public class UserService {
     }
 
     /**
+     *
+     * @param user A {@code User} class object in which a new journal entry needs addition.
+     * @param savedJournalEntry A journal entry that needs to be added into the user.
+     */
+    public void addJournalEntryInUser(User user, JournalEntry savedJournalEntry) {
+        user.getJournalEntries().add(savedJournalEntry);
+        userRepository.save(user);
+    }
+
+    /**
      * This method returns all the saved users from the collection.
      * @return The return type is {@code List<User>}.
      */
