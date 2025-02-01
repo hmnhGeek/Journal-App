@@ -86,7 +86,7 @@ public class JournalEntryController {
         String userName = authentication.getName();
         boolean deleted = journalEntryService.deleteById(id, userName);
         if (!deleted) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -99,6 +99,13 @@ public class JournalEntryController {
      */
     @PutMapping("/id/{id}")
     public ResponseEntity<JournalEntry> updateJournalEntryById(@PathVariable ObjectId id, @RequestBody JournalEntry journalEntry) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        User user = userService.findByUserName(userName);
+        List<JournalEntry> list = user.getJournalEntries().stream().filter(x -> x.getId().equals(id)).toList();
+        if (list.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         JournalEntry updatedJournalEntry = journalEntryService.updateById(id, journalEntry);
         return new ResponseEntity<>(updatedJournalEntry, HttpStatus.OK);
     }
