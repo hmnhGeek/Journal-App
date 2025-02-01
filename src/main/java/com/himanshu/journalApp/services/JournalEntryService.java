@@ -68,11 +68,16 @@ public class JournalEntryService {
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
      * @param userName A string parameter denoting the user whose journal entry is being deleted.
      */
-    public void deleteById(ObjectId id, String userName) {
-        journalEntryRepository.deleteById(id);
+    @Transactional
+    public boolean deleteById(ObjectId id, String userName) {
         User user = userService.findByUserName(userName);
-        user.getJournalEntries().removeIf(x -> x.getId().equals(id));
-        userService.save(user);
+        List<JournalEntry> list = user.getJournalEntries().stream().filter(x -> x.getId().equals(id)).toList();
+        if (list.isEmpty()) {
+            return false;
+        }
+        journalEntryRepository.deleteById(id);
+        userService.removeJournalEntryInUser(user, id);
+        return true;
     }
 
     /**

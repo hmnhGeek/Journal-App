@@ -78,12 +78,16 @@ public class JournalEntryController {
 
     /**
      * @param id A parameter of type {@code ObjectId} corresponding to the primary key in the mongodb
-     * @param userName A string type denoting the user whose journal entry is being deleted.
      * @return A {@code NO_CONTENT} HTTP Status.
      */
-    @DeleteMapping("/id/{userName}/{id}")
-    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id, @PathVariable String userName) {
-        journalEntryService.deleteById(id, userName);
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<?> deleteJournalEntryById(@PathVariable ObjectId id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+        boolean deleted = journalEntryService.deleteById(id, userName);
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -47,6 +47,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void removeJournalEntryInUser(User user, ObjectId id) {
+        user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+        userRepository.save(user);
+    }
+
     /**
      * This method returns all the saved users from the collection.
      * @return The return type is {@code List<User>}.
