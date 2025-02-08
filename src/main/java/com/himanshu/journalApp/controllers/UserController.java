@@ -21,20 +21,15 @@ public class UserController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody User user) {
-        User savedUser = userService.save(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        userService.updateUser(user);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{userName}")
-    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable String userName) {
-        User savedUser = userService.findByUserName(userName);
-        if (savedUser != null) {
-            savedUser.setUserName(user.getUserName());
-            savedUser.setPassword(user.getPassword());
-            userService.save(savedUser);
-        }
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser() {
+        userService.deleteUser();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

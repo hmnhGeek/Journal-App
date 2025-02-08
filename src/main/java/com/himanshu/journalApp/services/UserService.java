@@ -5,9 +5,15 @@ import com.himanshu.journalApp.entities.User;
 import com.himanshu.journalApp.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,14 +23,33 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     /**
      *
      * @param user Parameter of type {@code User}.
      * @return {@code User} by saving the entry inside the MongoDB collection.
      */
     public User save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(List.of("USER"));
         User savedJournalEntry = userRepository.save(user);
         return user;
+    }
+
+    /**
+     *
+     * @param user A {@code User} class object in which a new journal entry needs addition.
+     * @param savedJournalEntry A journal entry that needs to be added into the user.
+     */
+    public void addJournalEntryInUser(User user, JournalEntry savedJournalEntry) {
+        user.getJournalEntries().add(savedJournalEntry);
+        userRepository.save(user);
+    }
+
+    public void removeJournalEntryInUser(User user, ObjectId id) {
+        user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+        userRepository.save(user);
     }
 
     /**
@@ -63,5 +88,32 @@ public class UserService {
     public User findByUserName(String userName) {
         User user = userRepository.findByUserName(userName);
         return user;
+    }
+
+    /**
+     *
+     * @param user A type of {@code User} whose username or password needs to be updated.
+     */
+    public void updateUser(User user) {
+        // To authenticate a user from headers use this syntax.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userName = authentication.getName();
+
+        User savedUser = findByUserName(userName);
+        savedUser.setUserName(user.getUserName());
+        savedUser.setPassword(user.getPassword());
+        save(savedUser);
+    }
+
+    /**
+     * Delete the user in session.
+     */
+    public void deleteUser() {
+        // To authenticate a user from headers use this syntax.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = findByUserName(username);
+        deleteById(user.getId());
     }
 }

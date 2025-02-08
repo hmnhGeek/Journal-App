@@ -30,4 +30,7 @@ public class User {
     // This will create a reference to the journal_entries collection by just their ObjectId.
     @DBRef
     private List<JournalEntry> journalEntries = new ArrayList<>();
+
+    // to be used in Spring Security.
+    private List<String> roles = new ArrayList<>();
 }
